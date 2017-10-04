@@ -1,0 +1,3 @@
+[submodule "third_party/KBase"]
+	path = third_party/KBase
+	url = https://github.com/kingsamchen/KBase.git
