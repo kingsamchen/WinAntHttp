@@ -13,9 +13,24 @@
     <ClInclude Include="winant_response.h">
       <Filter>winant_http</Filter>
     </ClInclude>
+    <ClInclude Include="winant_api.h">
+      <Filter>winant_http</Filter>
+    </ClInclude>
+    <ClInclude Include="winant_request.h">
+      <Filter>winant_http</Filter>
+    </ClInclude>
+    <ClInclude Include="winant_request_builder.h">
+      <Filter>winant_http</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="winant_response.cpp">
+      <Filter>winant_http</Filter>
+    </ClCompile>
+    <ClCompile Include="winant_request.cpp">
+      <Filter>winant_http</Filter>
+    </ClCompile>
+    <ClCompile Include="winant_request_builder.cpp">
       <Filter>winant_http</Filter>
     </ClCompile>
   </ItemGroup>

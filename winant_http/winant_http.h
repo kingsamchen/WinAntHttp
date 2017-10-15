@@ -9,6 +9,8 @@
 #ifndef WINANT_HTTP_WINANT_HTTP_H_
 #define WINANT_HTTP_WINANT_HTTP_H_
 
+#include "winant_http/winant_api.h"
+
 namespace wat {
 
 }   // namespace wat
