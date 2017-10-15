@@ -156,15 +156,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="winant_api.h" />
+    <ClInclude Include="winant_common_types.h" />
     <ClInclude Include="winant_http.h" />
+    <ClInclude Include="winant_utils.h" />
     <ClInclude Include="winant_request.h" />
     <ClInclude Include="winant_request_builder.h" />
     <ClInclude Include="winant_response.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="winant_common_types.cpp" />
     <ClCompile Include="winant_request.cpp" />
     <ClCompile Include="winant_request_builder.cpp" />
     <ClCompile Include="winant_response.cpp" />
+    <ClCompile Include="winant_utils.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

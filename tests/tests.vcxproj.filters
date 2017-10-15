@@ -10,5 +10,11 @@
     <ClCompile Include="main.cpp">
       <Filter>test</Filter>
     </ClCompile>
+    <ClCompile Include="common_types_unittest.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="utils_unittest.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

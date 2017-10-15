@@ -9,6 +9,7 @@
 #ifndef WINANT_HTTP_WINANT_REQUEST_BUILDER_H_
 #define WINANT_HTTP_WINANT_REQUEST_BUILDER_H_
 
+#include "winant_http/winant_common_types.h"
 #include "winant_http/winant_request.h"
 
 namespace wat {
@@ -21,7 +22,9 @@ public:
 
     // TODO: Complete these.
 
-    void SetOption(...) {}
+    void SetOption(Url url) {}
+
+    void SetOption(Headers headers) {}
 
     HttpRequest Build()
     {
@@ -30,6 +33,8 @@ public:
 
 private:
     HttpRequest::Method method_;
+    Url url_;
+    Headers headers_;
 };
 
 }   // namespace wat
