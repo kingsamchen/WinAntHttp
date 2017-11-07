@@ -11,17 +11,27 @@
 
 #include <string>
 
+#include "kbase/basic_macros.h"
+
 namespace wat {
 
 class HttpResponse {
 public:
-    HttpResponse() = default;
+    HttpResponse(int status_code, std::string body);
 
     ~HttpResponse() = default;
 
+    DEFAULT_COPY(HttpResponse);
+
+    DEFAULT_MOVE(HttpResponse);
+
+    int status_code() const noexcept;
+
+    const std::string& text() const noexcept;
+
 private:
     int status_code_;
-    std::string text_;
+    std::string body_;
 };
 
 }   // namespace wat

@@ -16,25 +16,25 @@ namespace wat {
 
 class HttpRequestBuilder {
 public:
-    explicit HttpRequestBuilder(HttpRequest::Method method) {}
+    explicit HttpRequestBuilder(HttpRequest::Method method);
 
     ~HttpRequestBuilder() = default;
 
     // TODO: Complete these.
 
-    void SetOption(Url url) {}
+    void SetOption(Url url);
 
-    void SetOption(Headers headers) {}
+    void SetOption(Headers headers);
 
-    HttpRequest Build()
-    {
-        return {};
-    }
+    void SetOption(Parameters params);
+
+    HttpRequest Build() const;
 
 private:
     HttpRequest::Method method_;
     Url url_;
     Headers headers_;
+    Parameters parameters_;
 };
 
 }   // namespace wat

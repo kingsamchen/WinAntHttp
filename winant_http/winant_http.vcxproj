@@ -155,8 +155,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="internal\scoped_internet_handle.h" />
     <ClInclude Include="winant_api.h" />
     <ClInclude Include="winant_common_types.h" />
+    <ClInclude Include="winant_constants.h" />
     <ClInclude Include="winant_http.h" />
     <ClInclude Include="winant_utils.h" />
     <ClInclude Include="winant_request.h" />

@@ -113,6 +113,8 @@ public:
         return headers_.cend();
     }
 
+    std::string ToString() const;
+
 private:
     data_type headers_;
 };
@@ -136,7 +138,7 @@ struct Parameters {
 
     Parameters& Add(const Parameter& param);
 
-    std::string ToContent() const;
+    std::string ToString() const;
 };
 
 }   // namespace wat

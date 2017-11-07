@@ -113,7 +113,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(OutDir)winant_http.lib;$(OutDir)kbase.lib;$(OutDir)gtest.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>wininet.lib;$(OutDir)winant_http.lib;$(OutDir)kbase.lib;$(OutDir)gtest.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -156,6 +156,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="common_types_unittest.cpp" />
+    <ClCompile Include="http_request_unittest.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="utils_unittest.cpp" />
   </ItemGroup>

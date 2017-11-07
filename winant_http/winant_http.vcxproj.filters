@@ -5,6 +5,9 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="winant_http\internal">
+      <UniqueIdentifier>{38d2dac5-b241-4b50-bf7d-08873be6eec3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="winant_http.h">
@@ -26,6 +29,12 @@
       <Filter>winant_http</Filter>
     </ClInclude>
     <ClInclude Include="winant_utils.h">
+      <Filter>winant_http</Filter>
+    </ClInclude>
+    <ClInclude Include="internal\scoped_internet_handle.h">
+      <Filter>winant_http\internal</Filter>
+    </ClInclude>
+    <ClInclude Include="winant_constants.h">
       <Filter>winant_http</Filter>
     </ClInclude>
   </ItemGroup>

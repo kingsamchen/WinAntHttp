@@ -48,9 +48,8 @@ namespace wat {
 template<typename ...Args>
 HttpResponse Get(Args&&... args)
 {
-    BuildRequest(HttpRequest::Method::Get, std::forward<Args>(args)...);
-    // TODO: execute request and get the associated HttpResponse.
-    return HttpResponse();
+    HttpRequest request = BuildRequest(HttpRequest::Method::Get, std::forward<Args>(args)...);
+    return request.Start();
 }
 
 HttpResponse Post();

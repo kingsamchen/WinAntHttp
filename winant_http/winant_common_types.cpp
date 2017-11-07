@@ -5,6 +5,7 @@
 #include "winant_http/winant_common_types.h"
 
 #include "kbase/error_exception_util.h"
+#include "kbase/string_format.h"
 
 #include "winant_http/winant_utils.h"
 
@@ -39,6 +40,23 @@ void Headers::RemoveHeader(const std::string& key)
     headers_.erase(key);
 }
 
+std::string Headers::ToString() const
+{
+    std::string content;
+    for (const auto& header : headers_) {
+        if (header.second.empty()) {
+            kbase::StringAppendPrintf(content, "%s:\r\n", header.first.c_str());
+        } else {
+            kbase::StringAppendPrintf(content, "%s: %s\r\n", header.first.c_str(),
+                                      header.second.c_str());
+        }
+    }
+
+    content.append("\r\n");
+
+    return content;
+}
+
 // -*- Parameters -*-
 
 Parameters& Parameters::Add(const Parameter& param)
@@ -48,7 +66,7 @@ Parameters& Parameters::Add(const Parameter& param)
     return *this;
 }
 
-std::string Parameters::ToContent() const
+std::string Parameters::ToString() const
 {
     if (params.empty()) {
         return std::string();

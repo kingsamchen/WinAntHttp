@@ -6,6 +6,8 @@
 
 #include "winant_http/winant_common_types.h"
 
+#include "kbase/string_util.h"
+
 namespace wat {
 
 TEST(TypeUrl, GeneralUsage)
@@ -76,6 +78,22 @@ TEST(TypeHeaders, Iteration)
     }
 }
 
+TEST(TypeHeaders, ToString)
+{
+    Headers headers {
+        {"key1", "value1"},
+        {"key2", ""},
+        {"key3", "value3"}
+    };
+
+    const char kExpectedHeaderStr[] = "key1: value1\r\nkey2:\r\nkey3: value3\r\n\r\n";
+
+    auto header_string = headers.ToString();
+    ASSERT_TRUE(!header_string.empty());
+    EXPECT_TRUE(kbase::EndsWith(header_string, "\r\n\r\n"));
+    EXPECT_EQ(kExpectedHeaderStr, header_string);
+}
+
 TEST(TypeParameters, GeneralUsage)
 {
     Parameters empty_params;
@@ -91,7 +109,7 @@ TEST(TypeParameters, GeneralUsage)
 
     const char query_string[] =
         "access_key=token123&uid=789&appkey=winant%20http&appkey=backup%26winant";
-    EXPECT_EQ(query_string, params.ToContent());
+    EXPECT_EQ(query_string, params.ToString());
 }
 
 }   // namespace wat
