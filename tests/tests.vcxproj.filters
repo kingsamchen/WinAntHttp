@@ -16,7 +16,10 @@
     <ClCompile Include="utils_unittest.cpp">
       <Filter>test</Filter>
     </ClCompile>
-    <ClCompile Include="http_request_unittest.cpp">
+    <ClCompile Include="get_unittest.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="header_unittest.cpp">
       <Filter>test</Filter>
     </ClCompile>
   </ItemGroup>

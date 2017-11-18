@@ -156,7 +156,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="common_types_unittest.cpp" />
-    <ClCompile Include="http_request_unittest.cpp" />
+    <ClCompile Include="get_unittest.cpp" />
+    <ClCompile Include="header_unittest.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="utils_unittest.cpp" />
   </ItemGroup>

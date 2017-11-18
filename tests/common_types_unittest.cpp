@@ -112,4 +112,15 @@ TEST(TypeParameters, GeneralUsage)
     EXPECT_EQ(query_string, params.ToString());
 }
 
+TEST(TypeParameters, Empty)
+{
+    Parameters empty_params;
+    EXPECT_TRUE(empty_params.empty());
+
+    // Bypass internal empty detection.
+    Parameters empty_content {{"", ""}};
+    EXPECT_FALSE(empty_content.empty());
+    EXPECT_TRUE(empty_content.ToString().empty());
+}
+
 }   // namespace wat

@@ -35,7 +35,7 @@ TEST(WinAntUtils, EscapeUrl)
                                           "abcdefghijklmnopqrstuvwxyz"
                                           "0123456789"
                                           "-_.~");
-    for (int i = 0; i < 256; ++i) {
+    for (char i = 0; i < 256; ++i) {
         std::string in;
         in.push_back(i);
         std::string out = EscapeUrl(in);
