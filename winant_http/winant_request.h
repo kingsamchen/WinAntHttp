@@ -36,6 +36,8 @@ public:
 
     void SetHeaders(const Headers& headers);
 
+    void SetPayload(const Payload& payload);
+
     HttpResponse Start();
 
 private:

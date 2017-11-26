@@ -52,7 +52,12 @@ HttpResponse Get(Args&&... args)
     return request.Start();
 }
 
-HttpResponse Post();
+template<typename ...Args>
+HttpResponse Post(Args&&... args)
+{
+    HttpRequest request = BuildRequest(HttpRequest::Method::Post, std::forward<Args>(args)...);
+    return request.Start();
+}
 
 }   // namespace wat
 

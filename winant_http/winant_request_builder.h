@@ -28,6 +28,8 @@ public:
 
     void SetOption(Parameters params);
 
+    void SetOption(Payload payload);
+
     HttpRequest Build() const;
 
 private:
@@ -35,6 +37,7 @@ private:
     Url url_;
     Headers headers_;
     Parameters parameters_;
+    Payload payload_;
 };
 
 }   // namespace wat

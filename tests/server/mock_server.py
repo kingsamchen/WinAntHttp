@@ -18,9 +18,10 @@ def new_failed_response():
     return Response(FAILED, status=400)
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def root():
-    return 'Welcome to mock server!'
+    greeting = 'Welcome to mock server via {0}'.format(request.method)
+    return greeting
 
 
 @app.route('/query-string', methods=['GET'])
@@ -57,6 +58,17 @@ def empty_query_string():
         return new_passed_response()
     else:
         print('query-string is not empty: ' + str(request.args))
+        return new_failed_response()
+
+
+@app.route('/url-encoded-content', methods=['POST'])
+def url_encoded_content():
+    content = request.form
+    if content['type'] == 'urlencoded' and \
+       content['category'] == 'test' and \
+       'data' in content:
+        return new_passed_response()
+    else:
         return new_failed_response()
 
 

@@ -14,6 +14,7 @@
 #include <vector>
 
 #include "kbase/basic_macros.h"
+#include "kbase/string_view.h"
 
 namespace wat {
 
@@ -136,10 +137,39 @@ struct Parameters {
         return params.empty();
     }
 
-    Parameters& Add(const Parameter& param);
+    Parameters& Add(Parameter param);
 
     std::string ToString() const;
 };
+
+// (content-type header, content)
+using RequestContent = std::pair<kbase::WStringView, std::string>;
+
+struct Payload {
+    using Argument = std::pair<std::string, std::string>;
+    using data_type = std::vector<Argument>;
+
+    data_type data;
+
+    Payload() = default;
+
+    Payload(std::initializer_list<data_type::value_type> init)
+        : data(init)
+    {}
+
+    bool empty() const noexcept
+    {
+        return data.empty();
+    }
+
+    Payload& Add(Argument arg);
+
+    RequestContent ToString() const;
+};
+
+struct JSONContent {};
+
+struct Multipart {};
 
 }   // namespace wat
 

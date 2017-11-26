@@ -123,4 +123,20 @@ TEST(TypeParameters, Empty)
     EXPECT_TRUE(empty_content.ToString().empty());
 }
 
+TEST(TypePayload, GeneralUsage)
+{
+    Payload empty_payload;
+    EXPECT_TRUE(empty_payload.empty());
+
+    Payload payload {{"token", "token123"}};
+    EXPECT_FALSE(payload.empty());
+    payload.Add({"uid", "kcno.1"}).Add({"app", "winant http"});
+
+    const wchar_t type[] = L"Content-Type: application/x-www-form-urlencoded\r\n";
+    const char data[] = "token=token123&uid=kcno.1&app=winant%20http";
+    auto content = payload.ToString();
+    EXPECT_EQ(type, content.first);
+    EXPECT_EQ(data, content.second);
+}
+
 }   // namespace wat

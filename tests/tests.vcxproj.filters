@@ -22,5 +22,8 @@
     <ClCompile Include="header_unittest.cpp">
       <Filter>test</Filter>
     </ClCompile>
+    <ClCompile Include="post_unittest.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

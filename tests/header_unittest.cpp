@@ -23,9 +23,17 @@ TEST(RequestHeader, GeneralUsage)
         {"expires", "2020-01-01"}
     };
 
-    auto response = Get(Url(kRequestAddr), headers);
-    EXPECT_EQ(200, response.status_code());
-    EXPECT_EQ(kPassed, response.text());
+    {
+        auto response = Get(Url(kRequestAddr), headers);
+        EXPECT_EQ(200, response.status_code());
+        EXPECT_EQ(kPassed, response.text());
+    }
+
+    {
+        auto response = Post(Url(kRequestAddr), headers);
+        EXPECT_EQ(200, response.status_code());
+        EXPECT_EQ(kPassed, response.text());
+    }
 }
 
 }   // namespace wat

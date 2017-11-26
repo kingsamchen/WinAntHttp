@@ -9,6 +9,12 @@
 
 #include "winant_http/winant_utils.h"
 
+namespace {
+
+const wchar_t kContentTypeURLEncoded[] = L"Content-Type: application/x-www-form-urlencoded\r\n";
+
+}   // namespace
+
 namespace wat {
 
 // -*- Headers -*-
@@ -59,10 +65,10 @@ std::string Headers::ToString() const
 
 // -*- Parameters -*-
 
-Parameters& Parameters::Add(const Parameter& param)
+Parameters& Parameters::Add(Parameter param)
 {
     ENSURE(CHECK, !param.first.empty()).Require();
-    params.push_back(param);
+    params.push_back(std::move(param));
     return *this;
 }
 
@@ -87,6 +93,38 @@ std::string Parameters::ToString() const
     }
 
     return content;
+}
+
+// -*- Payload -*-
+
+Payload& Payload::Add(Argument arg)
+{
+    ENSURE(CHECK, !arg.first.empty()).Require();
+    data.push_back(std::move(arg));
+    return *this;
+}
+
+RequestContent Payload::ToString() const
+{
+    if (data.empty()) {
+        return {};
+    }
+
+    constexpr size_t kReservedSize = 32U;
+    std::string content;
+    content.reserve(kReservedSize);
+    for (const auto& argument : data) {
+        if (!content.empty()) {
+            content.append(1, '&');
+        }
+
+        content.append(EscapeUrl(argument.first));
+        if (!argument.second.empty()) {
+            content.append(1, '=').append(EscapeUrl(argument.second));
+        }
+    }
+
+    return {kContentTypeURLEncoded, std::move(content)};
 }
 
 }   // namespace wat

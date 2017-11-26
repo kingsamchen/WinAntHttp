@@ -47,12 +47,22 @@ void HttpRequestBuilder::SetOption(Parameters params)
     parameters_ = std::move(params);
 }
 
+void HttpRequestBuilder::SetOption(Payload payload)
+{
+    ENSURE(CHECK, !payload.empty()).Require();
+    payload_ = std::move(payload);
+}
+
 HttpRequest HttpRequestBuilder::Build() const
 {
     HttpRequest request(method_, CanonicalizeUrl(url_, parameters_));
 
     if (!headers_.empty()) {
         request.SetHeaders(headers_);
+    }
+
+    if (!payload_.empty()) {
+        request.SetPayload(payload_);
     }
 
     return request;

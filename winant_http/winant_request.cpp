@@ -130,8 +130,32 @@ void HttpRequest::SetHeaders(const Headers& headers)
     ENSURE(THROW, success == TRUE)(kbase::LastError())(headers_content).Require();
 }
 
+void HttpRequest::SetPayload(const Payload& payload)
+{
+    kbase::WStringView content_type;
+    std::string content;
+    std::tie(content_type, content) = payload.ToString();
+
+#if defined(NDEBUG)
+    DWORD flag = HTTP_ADDREQ_FLAG_ADD | HTTP_ADDREQ_FLAG_REPLACE;
+#else
+    DWORD flag = HTTP_ADDREQ_FLAG_ADD_IF_NEW;
+#endif
+
+    BOOL success = HttpAddRequestHeadersW(request_.get(),
+                                          content_type.data(),
+                                          static_cast<DWORD>(content_type.length()),
+                                          flag);
+    // TODO: Eliminate string creation once Guarantor being able to capture WStringView.
+    ENSURE(THROW, success == TRUE)(kbase::LastError())(content_type.ToString()).Require();
+
+    body_ = std::move(content);
+}
+
 HttpResponse HttpRequest::Start()
 {
+    FORCE_AS_NON_CONST_FUNCTION();
+
     void* body_data = nullptr;
     DWORD body_size = 0;
 
