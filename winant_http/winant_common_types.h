@@ -167,7 +167,24 @@ struct Payload {
     RequestContent ToString() const;
 };
 
-struct JSONContent {};
+struct JSONContent {
+    using data_type = std::string;
+
+    data_type data;
+
+    bool empty() const noexcept
+    {
+        return data.empty();
+    }
+
+    JSONContent() = default;
+
+    explicit JSONContent(std::string json_str)
+        : data(std::move(json_str))
+    {}
+
+    RequestContent ToString() const;
+};
 
 struct Multipart {};
 

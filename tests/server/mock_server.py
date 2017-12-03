@@ -91,6 +91,27 @@ def basic_headers():
         return new_failed_response()
 
 
+@app.route('/json-test', methods=['POST'])
+def json_test():
+    """
+    test data:
+        {
+            "zoomLevel": 0,
+            "trimOnSave": true,
+            "colorTheme": "Visual Studio Dark"
+        }
+    """
+    print(request.headers.get('Content-Type'))
+    print(request.get_json(force=True))
+    if request.headers.get('Content-Type') == 'application/json':
+        content = request.get_json()
+        if content.get('zoomLevel') == 0 and \
+           content.get('trimOnSave') is True and \
+           content.get('colorTheme') == 'Visual Studio Dark':
+            return new_passed_response()
+    return new_failed_response()
+
+
 def main():
     app.run()
 

@@ -15,6 +15,14 @@
 namespace wat {
 
 class HttpRequestBuilder {
+private:
+    enum class ContentType {
+        None,
+        Payload,
+        JSON,
+        Multipart
+    };
+
 public:
     explicit HttpRequestBuilder(HttpRequest::Method method);
 
@@ -30,14 +38,21 @@ public:
 
     void SetOption(Payload payload);
 
+    void SetOption(JSONContent json);
+
     HttpRequest Build() const;
+
+private:
+    void SetRequestContent(HttpRequest& request) const;
 
 private:
     HttpRequest::Method method_;
     Url url_;
     Headers headers_;
     Parameters parameters_;
+    ContentType content_type_;
     Payload payload_;
+    JSONContent json_;
 };
 
 }   // namespace wat

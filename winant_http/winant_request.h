@@ -38,7 +38,12 @@ public:
 
     void SetPayload(const Payload& payload);
 
+    void SetJSON(const JSONContent& json);
+
     HttpResponse Start();
+
+private:
+    void SetContent(RequestContent&& content);
 
 private:
     Method method_;

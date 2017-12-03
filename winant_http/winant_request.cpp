@@ -57,6 +57,21 @@ bool ReadResponseBody(HINTERNET request, std::string& response_body)
     return success == TRUE;
 }
 
+void SetContentHeader(HINTERNET request, kbase::WStringView content_type)
+{
+#if defined(NDEBUG)
+    DWORD flag = HTTP_ADDREQ_FLAG_ADD | HTTP_ADDREQ_FLAG_REPLACE;
+#else
+    DWORD flag = HTTP_ADDREQ_FLAG_ADD_IF_NEW;
+#endif
+
+    BOOL success = HttpAddRequestHeadersW(request,
+                                          content_type.data(),
+                                          static_cast<DWORD>(content_type.length()),
+                                          flag);
+    ENSURE(THROW, success == TRUE)(kbase::LastError())(content_type.ToString()).Require();
+}
+
 }   // namespace
 
 namespace wat {
@@ -132,24 +147,12 @@ void HttpRequest::SetHeaders(const Headers& headers)
 
 void HttpRequest::SetPayload(const Payload& payload)
 {
-    kbase::WStringView content_type;
-    std::string content;
-    std::tie(content_type, content) = payload.ToString();
+    SetContent(payload.ToString());
+}
 
-#if defined(NDEBUG)
-    DWORD flag = HTTP_ADDREQ_FLAG_ADD | HTTP_ADDREQ_FLAG_REPLACE;
-#else
-    DWORD flag = HTTP_ADDREQ_FLAG_ADD_IF_NEW;
-#endif
-
-    BOOL success = HttpAddRequestHeadersW(request_.get(),
-                                          content_type.data(),
-                                          static_cast<DWORD>(content_type.length()),
-                                          flag);
-    // TODO: Eliminate string creation once Guarantor being able to capture WStringView.
-    ENSURE(THROW, success == TRUE)(kbase::LastError())(content_type.ToString()).Require();
-
-    body_ = std::move(content);
+void HttpRequest::SetJSON(const JSONContent& json)
+{
+    SetContent(json.ToString());
 }
 
 HttpResponse HttpRequest::Start()
@@ -181,6 +184,17 @@ HttpResponse HttpRequest::Start()
     ENSURE(CHECK, complete)(kbase::LastError()).Require();
 
     return HttpResponse(response_status_code, std::move(response_body));
+}
+
+void HttpRequest::SetContent(RequestContent&& content)
+{
+    kbase::WStringView content_type;
+    std::string content_data;
+    std::tie(content_type, content_data) = std::move(content);
+
+    SetContentHeader(request_.get(), content_type);
+
+    body_ = std::move(content_data);
 }
 
 }   // namespace wat

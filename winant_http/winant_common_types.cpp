@@ -12,6 +12,7 @@
 namespace {
 
 const wchar_t kContentTypeURLEncoded[] = L"Content-Type: application/x-www-form-urlencoded\r\n";
+const wchar_t kContentTypeJSON[] = L"Content-Type: application/json\r\n";
 
 }   // namespace
 
@@ -125,6 +126,13 @@ RequestContent Payload::ToString() const
     }
 
     return {kContentTypeURLEncoded, std::move(content)};
+}
+
+// -*- JSONContent -*-
+
+RequestContent JSONContent::ToString() const
+{
+    return {kContentTypeJSON, data};
 }
 
 }   // namespace wat

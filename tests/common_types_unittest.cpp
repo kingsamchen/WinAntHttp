@@ -139,4 +139,18 @@ TEST(TypePayload, GeneralUsage)
     EXPECT_EQ(data, content.second);
 }
 
+TEST(TypeJSONContent, GeneralUsage)
+{
+    JSONContent json_data;
+    EXPECT_TRUE(json_data.empty());
+
+    const wchar_t type[] = L"Content-Type: application/json\r\n";
+    const char json_str[] = R"({"code": 0, "msg": "success"})";
+    json_data.data = json_str;
+    EXPECT_FALSE(json_data.empty());
+    auto content = json_data.ToString();
+    EXPECT_EQ(type, content.first);
+    EXPECT_EQ(json_str, content.second);
+}
+
 }   // namespace wat

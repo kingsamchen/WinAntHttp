@@ -44,4 +44,17 @@ TEST(Posts, EscapedUrlEncodedContent)
     EXPECT_EQ(kPassed, response.text());
 }
 
+TEST(Posts, PostAsJSON)
+{
+    constexpr char kRequestAddr[] = "http://127.0.0.1:5000/json-test";
+    JSONContent data(R"({
+        "zoomLevel": 0,
+        "trimOnSave": true,
+        "colorTheme": "Visual Studio Dark"
+    })");
+    auto response = Post(Url(kRequestAddr), std::move(data));
+    EXPECT_EQ(200, response.status_code());
+    EXPECT_EQ(kPassed, response.text());
+}
+
 }   // namespace wat
