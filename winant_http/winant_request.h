@@ -40,6 +40,8 @@ public:
 
     void SetJSON(const JSONContent& json);
 
+    void SetMultipart(const Multipart& multipart);
+
     HttpResponse Start();
 
 private:

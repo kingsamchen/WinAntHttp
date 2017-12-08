@@ -155,6 +155,11 @@ void HttpRequest::SetJSON(const JSONContent& json)
     SetContent(json.ToString());
 }
 
+void HttpRequest::SetMultipart(const Multipart& multipart)
+{
+    SetContent(multipart.ToString());
+}
+
 HttpResponse HttpRequest::Start()
 {
     FORCE_AS_NON_CONST_FUNCTION();
@@ -188,7 +193,7 @@ HttpResponse HttpRequest::Start()
 
 void HttpRequest::SetContent(RequestContent&& content)
 {
-    kbase::WStringView content_type;
+    std::wstring content_type;
     std::string content_data;
     std::tie(content_type, content_data) = std::move(content);
 

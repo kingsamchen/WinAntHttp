@@ -14,7 +14,6 @@
 #include <vector>
 
 #include "kbase/basic_macros.h"
-#include "kbase/string_view.h"
 
 namespace wat {
 
@@ -143,7 +142,7 @@ struct Parameters {
 };
 
 // (content-type header, content)
-using RequestContent = std::pair<kbase::WStringView, std::string>;
+using RequestContent = std::pair<std::wstring, std::string>;
 
 struct Payload {
     using Argument = std::pair<std::string, std::string>;
@@ -186,7 +185,35 @@ struct JSONContent {
     RequestContent ToString() const;
 };
 
-struct Multipart {};
+struct Multipart {
+    struct File {
+        std::string name;
+        std::string filename;
+        std::string mime_type;
+        std::string data;
+
+        static constexpr char kDefaultMimeType[] = "application/octet-stream";
+    };
+
+    // (name, value)
+    using Value = std::pair<std::string, std::string>;
+
+    std::vector<File> files;
+    std::vector<Value> values;
+
+    bool empty() const noexcept
+    {
+        return files.empty() && values.empty();
+    }
+
+    Multipart& AddPart(const File& file);
+
+    Multipart& AddPart(File&& file);
+
+    Multipart& AddPart(Value value);
+
+    RequestContent ToString() const;
+};
 
 }   // namespace wat
 

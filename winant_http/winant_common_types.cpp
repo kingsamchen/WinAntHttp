@@ -4,6 +4,9 @@
 
 #include "winant_http/winant_common_types.h"
 
+#include <numeric>
+#include <random>
+
 #include "kbase/error_exception_util.h"
 #include "kbase/string_format.h"
 
@@ -13,6 +16,21 @@ namespace {
 
 const wchar_t kContentTypeURLEncoded[] = L"Content-Type: application/x-www-form-urlencoded\r\n";
 const wchar_t kContentTypeJSON[] = L"Content-Type: application/json\r\n";
+const wchar_t kContentMultipart[] = L"Content-Type: multipart/form-data; boundary=";
+
+std::string GenerateMultipartBoundary()
+{
+    const char* kBoundaryPrefix = "---------------------------";
+
+    std::random_device rd;
+    std::default_random_engine engine(rd());
+    std::uniform_int_distribution<> dist;
+
+    int r0 = dist(engine);
+    int r1 = dist(engine);
+
+    return kbase::StringPrintf("%s%08X%08X", kBoundaryPrefix, r0, r1);
+}
 
 }   // namespace
 
@@ -133,6 +151,65 @@ RequestContent Payload::ToString() const
 RequestContent JSONContent::ToString() const
 {
     return {kContentTypeJSON, data};
+}
+
+// -*- Multipart -*-
+
+Multipart& Multipart::AddPart(Value value)
+{
+    values.push_back(std::move(value));
+
+    return *this;
+}
+
+Multipart& Multipart::AddPart(const File& file)
+{
+    files.push_back(file);
+
+    return *this;
+}
+
+Multipart& Multipart::AddPart(File&& file)
+{
+    files.push_back(std::move(file));
+
+    return *this;
+}
+
+RequestContent Multipart::ToString() const
+{
+    auto boundary = GenerateMultipartBoundary();
+
+    std::wstring content_type(kContentMultipart);
+    content_type.append(kbase::ASCIIToWide(boundary)).append(L"\r\n");
+
+    size_t reserved_size = 128U * files.size();
+    for (const auto& file : files) {
+        reserved_size += file.data.size();
+    }
+
+    std::string data;
+    data.reserve(reserved_size);
+
+    for (const auto& value : values) {
+        data.append("--").append(boundary).append("\r\n");
+        data.append("Content-Disposition: form-data; ")
+            .append("name=\"").append(value.first).append("\"\r\n\r\n")
+            .append(value.second).append("\r\n");
+    }
+
+    for (const auto& file : files) {
+        data.append("--").append(boundary).append("\r\n");
+        data.append("Content-Disposition: form-data; ")
+            .append("name=\"").append(file.name).append("\"; ")
+            .append("filename=\"").append(file.filename).append("\"\r\n");
+        data.append("Content-Type: ").append(file.mime_type).append("\r\n\r\n");
+        data.append(file.data).append("\r\n");
+    }
+
+    data.append("--").append(boundary).append("--\r\n");
+
+    return {content_type, std::move(data)};
 }
 
 }   // namespace wat

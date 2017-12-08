@@ -40,6 +40,8 @@ public:
 
     void SetOption(JSONContent json);
 
+    void SetOption(Multipart multipart);
+
     HttpRequest Build() const;
 
 private:
@@ -53,6 +55,7 @@ private:
     ContentType content_type_;
     Payload payload_;
     JSONContent json_;
+    Multipart multipart_;
 };
 
 }   // namespace wat

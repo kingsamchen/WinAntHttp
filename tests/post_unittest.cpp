@@ -57,4 +57,15 @@ TEST(Posts, PostAsJSON)
     EXPECT_EQ(kPassed, response.text());
 }
 
+TEST(Posts, PostAsMultipart)
+{
+    constexpr char kRequestAddr[] = "http://127.0.0.1:5000/multipart-test";
+    Multipart upload;
+    Multipart::File file {"file", "test.txt", Multipart::File::kDefaultMimeType, "hello, world!"};
+    upload.AddPart(std::move(file)).AddPart(Multipart::Value {"file_size", "unknown"});
+
+    auto response = Post(Url(kRequestAddr), std::move(upload));
+    EXPECT_EQ(200, response.status_code());
+}
+
 }   // namespace wat

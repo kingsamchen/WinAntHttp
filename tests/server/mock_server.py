@@ -112,6 +112,29 @@ def json_test():
     return new_failed_response()
 
 
+def validate_mulitpart_request(req):
+    if 'file' not in req.files:
+        print('no file found')
+        return False
+    f = req.files['file']
+    print(f.filename)
+    if f.filename != 'test.txt' or f.read().decode('utf-8') != 'hello, world!':
+        print('file error: ' + f.read().decode('utf-8'))
+        return False
+    if req.form.get('file_size') != 'unknown':
+        print('file_size error: ' + req.form.get('file_size'))
+        return False
+    return True
+
+
+@app.route('/multipart-test', methods=['POST'])
+def multipart_test():
+    print(request.headers.get('Content-Type'))
+    if validate_mulitpart_request(request):
+        return new_passed_response()
+    return new_failed_response()
+
+
 def main():
     app.run()
 

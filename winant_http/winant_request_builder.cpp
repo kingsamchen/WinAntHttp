@@ -65,6 +65,15 @@ void HttpRequestBuilder::SetOption(JSONContent json)
     content_type_ = ContentType::JSON;
 }
 
+void HttpRequestBuilder::SetOption(Multipart multipart)
+{
+    ENSURE(CHECK, content_type_ == ContentType::None).Require();
+    ENSURE(CHECK, !multipart.empty()).Require();
+
+    multipart_ = std::move(multipart);
+    content_type_ = ContentType::Multipart;
+}
+
 void HttpRequestBuilder::SetRequestContent(HttpRequest& request) const
 {
     ENSURE(CHECK, content_type_ != ContentType::None).Require();
@@ -76,6 +85,10 @@ void HttpRequestBuilder::SetRequestContent(HttpRequest& request) const
 
         case ContentType::JSON:
             request.SetJSON(json_);
+            break;
+
+        case ContentType::Multipart:
+            request.SetMultipart(multipart_);
             break;
 
         default:

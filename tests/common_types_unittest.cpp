@@ -6,6 +6,7 @@
 
 #include "winant_http/winant_common_types.h"
 
+#include "kbase/string_format.h"
 #include "kbase/string_util.h"
 
 namespace wat {
@@ -151,6 +152,43 @@ TEST(TypeJSONContent, GeneralUsage)
     auto content = json_data.ToString();
     EXPECT_EQ(type, content.first);
     EXPECT_EQ(json_str, content.second);
+}
+
+TEST(TypeMultipart, Empty)
+{
+    Multipart part;
+    EXPECT_TRUE(part.empty());
+
+    part.AddPart(Multipart::Value {"key", "value"});
+    EXPECT_FALSE(part.empty());
+}
+
+TEST(TypeMultipart, Generation)
+{
+    Multipart upload;
+    Multipart::File file {"file", "test.txt", Multipart::File::kDefaultMimeType, "hello, world!"};
+    upload.AddPart(std::move(file)).AddPart(Multipart::Value {"file_size", "unknown"});
+
+    auto content = upload.ToString();
+    kbase::WStringView type = L"Content-Type: multipart/form-data; boundary=";
+    EXPECT_TRUE(kbase::StartsWith(content.first, type));
+    EXPECT_TRUE(kbase::EndsWith(content.first, L"\r\n"));
+
+    std::cout << content.second << std::endl;
+
+    auto boundary = kbase::WideToASCII(content.first.substr(content.first.find('=') + 1));
+    kbase::EraseChars(boundary, "\r\n");
+    constexpr const char* data_template =
+        "--{0}\r\n"
+        "Content-Disposition: form-data; name=\"file\"; filename=\"test.txt\"\r\n"
+        "Content-Type: application/octet-stream\r\n\r\n"
+        "hello, world!\r\n"
+        "--{0}\r\n"
+        "Content-Disposition: form-data; name=\"file_size\"\r\n\r\n"
+        "unknown\r\n"
+        "--{0}--\r\n";
+    auto expected = kbase::StringFormat(data_template, boundary);
+    EXPECT_EQ(expected, content.second);
 }
 
 }   // namespace wat
