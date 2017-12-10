@@ -158,6 +158,7 @@
     <ClCompile Include="common_types_unittest.cpp" />
     <ClCompile Include="get_unittest.cpp" />
     <ClCompile Include="header_unittest.cpp" />
+    <ClCompile Include="head_unittest.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="post_unittest.cpp" />
     <ClCompile Include="utils_unittest.cpp" />

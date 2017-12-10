@@ -23,7 +23,7 @@ public:
     enum class Method : size_t {
         Get = 0,
         Post,
-        Header
+        Head
     };
 
     HttpRequest(Method method, const Url& url);

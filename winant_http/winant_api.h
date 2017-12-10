@@ -59,6 +59,13 @@ HttpResponse Post(Args&&... args)
     return request.Start();
 }
 
+template<typename ...Args>
+HttpResponse Head(Args&&... args)
+{
+    HttpRequest request = BuildRequest(HttpRequest::Method::Head, std::forward<Args>(args)...);
+    return request.Start();
+}
+
 }   // namespace wat
 
 #endif  // WINANT_HTTP_WINANT_API_H_

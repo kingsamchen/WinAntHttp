@@ -49,6 +49,7 @@ void HttpRequestBuilder::SetOption(Parameters params)
 
 void HttpRequestBuilder::SetOption(Payload payload)
 {
+    ENSURE(CHECK, method_ == HttpRequest::Method::Post).Require();
     ENSURE(CHECK, content_type_ == ContentType::None).Require();
     ENSURE(CHECK, !payload.empty()).Require();
 
@@ -58,6 +59,7 @@ void HttpRequestBuilder::SetOption(Payload payload)
 
 void HttpRequestBuilder::SetOption(JSONContent json)
 {
+    ENSURE(CHECK, method_ == HttpRequest::Method::Post).Require();
     ENSURE(CHECK, content_type_ == ContentType::None).Require();
     ENSURE(CHECK, !json.empty()).Require();
 
@@ -67,6 +69,7 @@ void HttpRequestBuilder::SetOption(JSONContent json)
 
 void HttpRequestBuilder::SetOption(Multipart multipart)
 {
+    ENSURE(CHECK, method_ == HttpRequest::Method::Post).Require();
     ENSURE(CHECK, content_type_ == ContentType::None).Require();
     ENSURE(CHECK, !multipart.empty()).Require();
 
@@ -76,8 +79,6 @@ void HttpRequestBuilder::SetOption(Multipart multipart)
 
 void HttpRequestBuilder::SetRequestContent(HttpRequest& request) const
 {
-    ENSURE(CHECK, content_type_ != ContentType::None).Require();
-
     switch (content_type_) {
         case ContentType::Payload:
             request.SetPayload(payload_);

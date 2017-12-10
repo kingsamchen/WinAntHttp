@@ -22,7 +22,7 @@ using wat::HttpRequest;
 constexpr std::pair<HttpRequest::Method, const wchar_t*> kVerbTable[] {
     {HttpRequest::Method::Get, L"GET"},
     {HttpRequest::Method::Post, L"POST"},
-    {HttpRequest::Method::Header, L"HEADER"}
+    {HttpRequest::Method::Head, L"HEAD"}
 };
 
 const wchar_t* MethodToVerb(HttpRequest::Method method)

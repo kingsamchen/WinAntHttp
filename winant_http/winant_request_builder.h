@@ -28,8 +28,6 @@ public:
 
     ~HttpRequestBuilder() = default;
 
-    // TODO: Complete these.
-
     void SetOption(Url url);
 
     void SetOption(Headers headers);
