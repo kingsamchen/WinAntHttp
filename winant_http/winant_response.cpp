@@ -6,13 +6,18 @@
 
 namespace wat {
 
-HttpResponse::HttpResponse(int status_code, std::string body)
-    : status_code_(status_code), body_(std::move(body))
+HttpResponse::HttpResponse(int status_code, Headers headers, std::string body)
+    : status_code_(status_code), headers_(std::move(headers)), body_(std::move(body))
 {}
 
 int HttpResponse::status_code() const noexcept
 {
     return status_code_;
+}
+
+const Headers& HttpResponse::headers() const noexcept
+{
+    return headers_;
 }
 
 const std::string& HttpResponse::text() const noexcept

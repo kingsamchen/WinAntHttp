@@ -4,6 +4,7 @@
 
 #include "winant_http/winant_request.h"
 
+#include <string>
 #include <utility>
 
 #include <Windows.h>
@@ -12,11 +13,14 @@
 #include "kbase/basic_macros.h"
 #include "kbase/error_exception_util.h"
 #include "kbase/string_encoding_conversions.h"
+#include "kbase/string_util.h"
+#include "kbase/tokenizer.h"
 
 #include "winant_http/winant_constants.h"
 
 namespace {
 
+using wat::Headers;
 using wat::HttpRequest;
 
 constexpr std::pair<HttpRequest::Method, const wchar_t*> kVerbTable[] {
@@ -36,6 +40,42 @@ const wchar_t* MethodToVerb(HttpRequest::Method method)
     ENSURE(CHECK, kbase::NotReached())(method).Require();
 
     return nullptr;
+}
+
+auto SplitHeaderLine(kbase::StringView header_line)
+{
+    constexpr kbase::StringView delim = ": ";
+    auto pos = header_line.find(delim);
+    ENSURE(CHECK, pos != kbase::StringView::npos)(header_line).Require();
+
+    auto name = header_line.substr(0, pos);
+    auto value = header_line.substr(pos + delim.size());
+
+    return std::make_pair(name.ToString(), value.ToString());
+}
+
+bool ReadResponseHeaders(HINTERNET request, Headers& headers)
+{
+    DWORD header_size = 0;
+
+    HttpQueryInfoA(request, HTTP_QUERY_RAW_HEADERS_CRLF, nullptr, &header_size, nullptr);
+    kbase::LastError error;
+    ENSURE(CHECK, error.error_code() == ERROR_INSUFFICIENT_BUFFER)(error).Require();
+
+    std::string header_buf;
+    auto buf = kbase::WriteInto(header_buf, header_size);
+    BOOL success = HttpQueryInfoA(request, HTTP_QUERY_RAW_HEADERS_CRLF, buf, &header_size, nullptr);
+
+    // Skip the status line.
+    kbase::Tokenizer header_lines(header_buf, "\r\n");
+    for (auto it = std::next(header_lines.begin()); it != header_lines.end(); ++it) {
+        if (!it->empty()) {
+            auto values = SplitHeaderLine(*it);
+            headers.SetHeader(values.first, values.second);
+        }
+    }
+
+    return success == TRUE;
 }
 
 bool ReadResponseBody(HINTERNET request, std::string& response_body)
@@ -184,11 +224,17 @@ HttpResponse HttpRequest::Start()
                              &response_status_code, &status_code_size, nullptr);
     ENSURE(THROW, success == TRUE)(kbase::LastError()).Require();
 
-    std::string response_body;
-    bool complete = ReadResponseBody(request_.get(), response_body);
+    Headers response_headers;
+    bool complete = ReadResponseHeaders(request_.get(), response_headers);
     ENSURE(CHECK, complete)(kbase::LastError()).Require();
 
-    return HttpResponse(response_status_code, std::move(response_body));
+    std::string response_body;
+    complete = ReadResponseBody(request_.get(), response_body);
+    ENSURE(CHECK, complete)(kbase::LastError()).Require();
+
+    return HttpResponse(response_status_code,
+                        std::move(response_headers),
+                        std::move(response_body));
 }
 
 void HttpRequest::SetContent(RequestContent&& content)

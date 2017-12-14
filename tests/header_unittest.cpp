@@ -36,4 +36,13 @@ TEST(RequestHeader, GeneralUsage)
     }
 }
 
+TEST(ResponseHeader, GeneralUsage)
+{
+    constexpr char kRequestAddr[] = "http://127.0.0.1:5000/";
+    auto response = Get(Url(kRequestAddr));
+    EXPECT_EQ(200, response.status_code());
+    EXPECT_TRUE(!response.headers().empty());
+    EXPECT_TRUE(response.headers().HasHeader("Content-Type"));
+}
+
 }   // namespace wat

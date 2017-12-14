@@ -13,11 +13,13 @@
 
 #include "kbase/basic_macros.h"
 
+#include "winant_http/winant_common_types.h"
+
 namespace wat {
 
 class HttpResponse {
 public:
-    HttpResponse(int status_code, std::string body);
+    HttpResponse(int status_code, Headers headers, std::string body);
 
     ~HttpResponse() = default;
 
@@ -27,10 +29,13 @@ public:
 
     int status_code() const noexcept;
 
+    const Headers& headers() const noexcept;
+
     const std::string& text() const noexcept;
 
 private:
     int status_code_;
+    Headers headers_;
     std::string body_;
 };
 
