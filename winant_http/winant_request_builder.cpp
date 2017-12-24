@@ -41,6 +41,11 @@ void HttpRequestBuilder::SetOption(Headers headers)
     headers_ = std::move(headers);
 }
 
+void HttpRequestBuilder::SetOption(LoadFlags flags)
+{
+    load_flags_ = flags;
+}
+
 void HttpRequestBuilder::SetOption(Parameters params)
 {
     ENSURE(CHECK, !params.empty()).Require();
@@ -100,6 +105,10 @@ void HttpRequestBuilder::SetRequestContent(HttpRequest& request) const
 HttpRequest HttpRequestBuilder::Build() const
 {
     HttpRequest request(method_, CanonicalizeUrl(url_, parameters_));
+
+    if (load_flags_.flags != LoadFlags::Normal) {
+        request.SetLoadFlags(load_flags_);
+    }
 
     if (!headers_.empty()) {
         request.SetHeaders(headers_);

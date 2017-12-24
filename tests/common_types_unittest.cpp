@@ -4,6 +4,7 @@
 
 #include "gtest/gtest.h"
 
+#include "winant_http/winant_api.h"
 #include "winant_http/winant_common_types.h"
 
 #include "kbase/string_format.h"
@@ -189,6 +190,18 @@ TEST(TypeMultipart, Generation)
         "--{0}--\r\n";
     auto expected = kbase::StringFormat(data_template, boundary);
     EXPECT_EQ(expected, content.second);
+}
+
+TEST(TypeLoadFlags, DoNotSaveResponseBody)
+{
+    constexpr char kHost[] = "https://httpbin.org/get";
+
+    auto response = Get(Url(kHost), LoadFlags(LoadFlags::DoNotSaveResponseBody));
+    EXPECT_EQ(200, response.status_code());
+    EXPECT_TRUE(response.text().empty());
+    std::string content_type;
+    EXPECT_TRUE(response.headers().GetHeader("Content-Type", content_type));
+    EXPECT_EQ("application/json", content_type);
 }
 
 }   // namespace wat

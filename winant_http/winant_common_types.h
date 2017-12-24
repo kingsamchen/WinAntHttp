@@ -215,6 +215,25 @@ struct Multipart {
     RequestContent ToString() const;
 };
 
+struct LoadFlags {
+    using value_type = uint32_t;
+
+    value_type flags;
+
+    enum : value_type {
+        Normal = 0,
+        DoNotSaveResponseBody = 1 << 0
+    };
+
+    LoadFlags()
+        : flags(Normal)
+    {}
+
+    explicit LoadFlags(value_type flags)
+        : flags(flags)
+    {}
+};
+
 }   // namespace wat
 
 #endif  // WINANT_HTTP_WINANT_COMMON_TYPES_H_

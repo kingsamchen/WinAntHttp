@@ -78,7 +78,8 @@ bool ReadResponseHeaders(HINTERNET request, Headers& headers)
     return success == TRUE;
 }
 
-bool ReadResponseBody(HINTERNET request, std::string& response_body)
+// `response_body` might be nullptr, if you decide not to save the response body.
+bool ReadResponseBody(HINTERNET request, std::string* response_body)
 {
     constexpr DWORD kBufSize = 4 * 1024;
     char buf[kBufSize] {0};
@@ -91,7 +92,9 @@ bool ReadResponseBody(HINTERNET request, std::string& response_body)
             break;
         }
 
-        response_body.append(buf, bytes_read);
+        if (response_body) {
+            response_body->append(buf, bytes_read);
+        }
     }
 
     return success == TRUE;
@@ -173,6 +176,11 @@ HttpRequest::HttpRequest(Method method, const Url& url)
     ENSURE(THROW, !!request_)(kbase::LastError()).Require();
 }
 
+void HttpRequest::SetLoadFlags(LoadFlags flags)
+{
+    load_flags_ = flags;
+}
+
 void HttpRequest::SetHeaders(const Headers& headers)
 {
     FORCE_AS_NON_CONST_FUNCTION();
@@ -229,7 +237,9 @@ HttpResponse HttpRequest::Start()
     ENSURE(CHECK, complete)(kbase::LastError()).Require();
 
     std::string response_body;
-    complete = ReadResponseBody(request_.get(), response_body);
+    std::string* body_ptr = (load_flags_.flags | LoadFlags::DoNotSaveResponseBody) ?
+                                nullptr : &response_body;
+    complete = ReadResponseBody(request_.get(), body_ptr);
     ENSURE(CHECK, complete)(kbase::LastError()).Require();
 
     return HttpResponse(response_status_code,

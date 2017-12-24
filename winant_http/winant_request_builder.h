@@ -32,6 +32,8 @@ public:
 
     void SetOption(Headers headers);
 
+    void SetOption(LoadFlags flags);
+
     void SetOption(Parameters params);
 
     void SetOption(Payload payload);
@@ -49,6 +51,7 @@ private:
     HttpRequest::Method method_;
     Url url_;
     Headers headers_;
+    LoadFlags load_flags_;
     Parameters parameters_;
     ContentType content_type_;
     Payload payload_;

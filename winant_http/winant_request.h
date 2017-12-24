@@ -34,6 +34,8 @@ public:
 
     DEFAULT_MOVE(HttpRequest);
 
+    void SetLoadFlags(LoadFlags flags);
+
     void SetHeaders(const Headers& headers);
 
     void SetPayload(const Payload& payload);
@@ -50,6 +52,7 @@ private:
 private:
     Method method_;
     Url canonicalized_url_;
+    LoadFlags load_flags_;
     std::string body_;
     internal::ScopedInternetHandle inet_env_;
     internal::ScopedInternetHandle conn_session_;
