@@ -13,10 +13,8 @@
 #include "winant_http/winant_request_builder.h"
 #include "winant_http/winant_response.h"
 
-namespace {
-
-using wat::HttpRequest;
-using wat::HttpRequestBuilder;
+namespace wat {
+namespace internal {
 
 template<typename Arg>
 void SetRequestBuilder(HttpRequestBuilder& builder, Arg&& arg)
@@ -41,28 +39,29 @@ HttpRequest BuildRequest(HttpRequest::Method method, Args&&... args)
     return builder.Build();
 }
 
-}   // namespace
-
-namespace wat {
+}   // namespace internal
 
 template<typename ...Args>
 HttpResponse Get(Args&&... args)
 {
-    HttpRequest request = BuildRequest(HttpRequest::Method::Get, std::forward<Args>(args)...);
+    HttpRequest request = internal::BuildRequest(HttpRequest::Method::Get,
+                                                 std::forward<Args>(args)...);
     return request.Start();
 }
 
 template<typename ...Args>
 HttpResponse Post(Args&&... args)
 {
-    HttpRequest request = BuildRequest(HttpRequest::Method::Post, std::forward<Args>(args)...);
+    HttpRequest request = internal::BuildRequest(HttpRequest::Method::Post,
+                                                 std::forward<Args>(args)...);
     return request.Start();
 }
 
 template<typename ...Args>
 HttpResponse Head(Args&&... args)
 {
-    HttpRequest request = BuildRequest(HttpRequest::Method::Head, std::forward<Args>(args)...);
+    HttpRequest request = internal::BuildRequest(HttpRequest::Method::Head,
+                                                 std::forward<Args>(args)...);
     return request.Start();
 }
 
