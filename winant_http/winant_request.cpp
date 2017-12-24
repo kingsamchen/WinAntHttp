@@ -70,10 +70,8 @@ bool ReadResponseHeaders(HINTERNET request, Headers& headers)
     // Skip the status line.
     kbase::Tokenizer header_lines(header_buf, "\r\n");
     for (auto it = std::next(header_lines.begin()); it != header_lines.end(); ++it) {
-        if (!it->empty()) {
-            auto values = SplitHeaderLine(*it);
-            headers.SetHeader(values.first, values.second);
-        }
+        auto values = SplitHeaderLine(*it);
+        headers.SetHeader(values.first, values.second);
     }
 
     return success == TRUE;
@@ -126,7 +124,7 @@ void SetContentHeader(HINTERNET request, kbase::WStringView content_type)
                                           content_type.data(),
                                           static_cast<DWORD>(content_type.length()),
                                           flag);
-    ENSURE(THROW, success == TRUE)(kbase::LastError())(content_type.ToString()).Require();
+    ENSURE(THROW, success == TRUE)(kbase::LastError())(content_type).Require();
 }
 
 }   // namespace
