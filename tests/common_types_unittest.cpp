@@ -204,4 +204,26 @@ TEST(TypeLoadFlags, DoNotSaveResponseBody)
     EXPECT_EQ("application/json", content_type);
 }
 
+TEST(TypeReadResponseHandler, UseAsDownloader)
+{
+    constexpr char kHost[] = "https://httpbin.org/get";
+
+    std::string data;
+    auto response_saver = [&data](const char* buf, int bytes_read) {
+        if (bytes_read > 0) {
+            data.append(buf, bytes_read);
+        } else if (bytes_read == 0) {
+            data.append("\n--data end--\n");
+        }
+    };
+
+    auto response = Get(Url(kHost), LoadFlags(LoadFlags::DoNotSaveResponseBody),
+                        ReadResponseHandler(response_saver));
+    EXPECT_EQ(200, response.status_code());
+    EXPECT_TRUE(response.text().empty());
+    EXPECT_FALSE(data.empty());
+    EXPECT_TRUE(kbase::EndsWith(data, "--data end--\n"));
+    std::cout << data;
+}
+
 }   // namespace wat

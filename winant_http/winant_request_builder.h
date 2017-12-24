@@ -42,6 +42,8 @@ public:
 
     void SetOption(Multipart multipart);
 
+    void SetOption(ReadResponseHandler handler);
+
     HttpRequest Build() const;
 
 private:
@@ -57,6 +59,7 @@ private:
     Payload payload_;
     JSONContent json_;
     Multipart multipart_;
+    ReadResponseHandler read_handler_;
 };
 
 }   // namespace wat

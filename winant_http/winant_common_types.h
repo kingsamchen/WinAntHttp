@@ -9,6 +9,7 @@
 #ifndef WINANT_HTTP_WINANT_COMMON_TYPES_H_
 #define WINANT_HTTP_WINANT_COMMON_TYPES_H_
 
+#include <functional>
 #include <map>
 #include <string>
 #include <vector>
@@ -233,6 +234,11 @@ struct LoadFlags {
         : flags(flags)
     {}
 };
+
+// `bytes_read` indicates the number of bytes of `data` in a successful read.
+// A value of 0 indicates there is no more data available to read from the stream.
+// If an error occurred, `bytes_read` will be -1.
+using ReadResponseHandler = std::function<void(const char* data, int bytes_read)>;
 
 }   // namespace wat
 

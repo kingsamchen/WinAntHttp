@@ -22,6 +22,7 @@ namespace {
 
 using wat::Headers;
 using wat::HttpRequest;
+using wat::ReadResponseHandler;
 
 constexpr std::pair<HttpRequest::Method, const wchar_t*> kVerbTable[] {
     {HttpRequest::Method::Get, L"GET"},
@@ -79,7 +80,8 @@ bool ReadResponseHeaders(HINTERNET request, Headers& headers)
 }
 
 // `response_body` might be nullptr, if you decide not to save the response body.
-bool ReadResponseBody(HINTERNET request, std::string* response_body)
+bool ReadResponseBody(HINTERNET request, std::string* response_body,
+                      const ReadResponseHandler& read_handler)
 {
     constexpr DWORD kBufSize = 4 * 1024;
     char buf[kBufSize] {0};
@@ -94,6 +96,18 @@ bool ReadResponseBody(HINTERNET request, std::string* response_body)
 
         if (response_body) {
             response_body->append(buf, bytes_read);
+        }
+
+        if (read_handler) {
+            read_handler(buf, static_cast<int>(bytes_read));
+        }
+    }
+
+    if (read_handler) {
+        if (success) {
+            read_handler(buf, 0);
+        } else {
+            read_handler(nullptr, -1);
         }
     }
 
@@ -208,6 +222,11 @@ void HttpRequest::SetMultipart(const Multipart& multipart)
     SetContent(multipart.ToString());
 }
 
+void HttpRequest::SetReadResponseHandler(ReadResponseHandler handler)
+{
+    read_response_handler_ = std::move(handler);
+}
+
 HttpResponse HttpRequest::Start()
 {
     FORCE_AS_NON_CONST_FUNCTION();
@@ -239,7 +258,7 @@ HttpResponse HttpRequest::Start()
     std::string response_body;
     std::string* body_ptr = (load_flags_.flags | LoadFlags::DoNotSaveResponseBody) ?
                                 nullptr : &response_body;
-    complete = ReadResponseBody(request_.get(), body_ptr);
+    complete = ReadResponseBody(request_.get(), body_ptr, read_response_handler_);
     ENSURE(CHECK, complete)(kbase::LastError()).Require();
 
     return HttpResponse(response_status_code,

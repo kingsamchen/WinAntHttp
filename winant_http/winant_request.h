@@ -44,6 +44,8 @@ public:
 
     void SetMultipart(const Multipart& multipart);
 
+    void SetReadResponseHandler(ReadResponseHandler handler);
+
     HttpResponse Start();
 
 private:
@@ -54,6 +56,7 @@ private:
     Url canonicalized_url_;
     LoadFlags load_flags_;
     std::string body_;
+    ReadResponseHandler read_response_handler_;
     internal::ScopedInternetHandle inet_env_;
     internal::ScopedInternetHandle conn_session_;
     internal::ScopedInternetHandle request_;

@@ -102,6 +102,11 @@ void HttpRequestBuilder::SetRequestContent(HttpRequest& request) const
     }
 }
 
+void HttpRequestBuilder::SetOption(ReadResponseHandler handler)
+{
+    read_handler_ = std::move(handler);
+}
+
 HttpRequest HttpRequestBuilder::Build() const
 {
     HttpRequest request(method_, CanonicalizeUrl(url_, parameters_));
@@ -116,6 +121,10 @@ HttpRequest HttpRequestBuilder::Build() const
 
     if (content_type_ != ContentType::None) {
         SetRequestContent(request);
+    }
+
+    if (read_handler_) {
+        request.SetReadResponseHandler(read_handler_);
     }
 
     return request;
