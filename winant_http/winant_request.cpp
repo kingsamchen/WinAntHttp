@@ -254,7 +254,7 @@ HttpResponse HttpRequest::Start()
     ENSURE(CHECK, complete)(kbase::LastError()).Require();
 
     std::string response_body;
-    std::string* body_ptr = (load_flags_.flags | LoadFlags::DoNotSaveResponseBody) ?
+    std::string* body_ptr = (load_flags_.flags & LoadFlags::DoNotSaveResponseBody) ?
                                 nullptr : &response_body;
     complete = ReadResponseBody(request_.get(), body_ptr, read_response_handler_);
     ENSURE(CHECK, complete)(kbase::LastError()).Require();
