@@ -9,6 +9,8 @@
 #ifndef WINANT_HTTP_WINANT_REQUEST_H_
 #define WINANT_HTTP_WINANT_REQUEST_H_
 
+#include <iostream>
+
 #include "kbase/basic_macros.h"
 #include "kbase/basic_types.h"
 
@@ -30,9 +32,11 @@ public:
 
     ~HttpRequest() = default;
 
-    DISALLOW_COPY(HttpRequest);
+    HttpRequest(const HttpRequest&) = default;
+	HttpRequest& operator=(const HttpRequest&) = default;
 
-    DEFAULT_MOVE(HttpRequest);
+	HttpRequest(HttpRequest&&) = default;
+	HttpRequest& operator=(HttpRequest&&) = default;
 
     void SetLoadFlags(LoadFlags flags);
 

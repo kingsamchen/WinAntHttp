@@ -28,9 +28,11 @@ public:
 
     ~Url() = default;
 
-    DEFAULT_COPY(Url);
+    Url(const Url&) = default;
+	Url& operator=(const Url&) = default;
 
-    DEFAULT_MOVE(Url);
+	Url(Url&&) = default;
+	Url& operator=(Url&&) = default;
 
     bool empty() const noexcept
     {
@@ -61,9 +63,11 @@ public:
 
     ~Headers() = default;
 
-    DEFAULT_COPY(Headers);
+    Headers(const Headers&) = default;
+	Headers& operator=(const Headers&) = default;
 
-    DEFAULT_MOVE(Headers);
+	Headers(Headers&&) = default;
+	Headers& operator=(Headers&&) = default;
 
     bool empty() const noexcept
     {
