@@ -41,11 +41,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 	$<INSTALL_INTERFACE:include/${PROJECT_NAME}>
 )
 
-# Include kbase dir
-target_include_directories(${PROJECT_NAME} PUBLIC
-	"${CMAKE_CURRENT_SOURCE_DIR}/third_party/KBase/src"
-)
-
 # Add necessary defines
 target_compile_definitions(${PROJECT_NAME} PRIVATE
 	"-DUNICODE -DNOMINMAX"
