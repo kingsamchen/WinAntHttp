@@ -39,11 +39,18 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 )
 
 # Include kbase dir
-target_include_directories(${PROJECT_NAME} PRIVATE
+target_include_directories(${PROJECT_NAME} PUBLIC
 	"${CMAKE_CURRENT_SOURCE_DIR}/third_party/KBase/src"
 )
 
 # Add necessary defines
 target_compile_definitions(${PROJECT_NAME} PRIVATE
 	"-DUNICODE -DNOMINMAX"
+)
+
+add_subdirectory(third_party/KBase)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE
+	kbase
+	wininet
 )

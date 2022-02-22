@@ -32,9 +32,11 @@ public:
 
     ~HttpRequest() = default;
 
-    DISALLOW_COPY(HttpRequest);
+    HttpRequest(const HttpRequest&) = default;
+	HttpRequest& operator=(const HttpRequest&) = default;
 
-    DEFAULT_MOVE(HttpRequest);
+	HttpRequest(HttpRequest&&) = default;
+	HttpRequest& operator=(HttpRequest&&) = default;
 
     void SetLoadFlags(LoadFlags flags);
 

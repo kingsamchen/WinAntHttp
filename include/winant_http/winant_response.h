@@ -23,9 +23,11 @@ public:
 
     ~HttpResponse() = default;
 
-    DEFAULT_COPY(HttpResponse);
+    HttpResponse(const HttpResponse&) = default;
+	HttpResponse &operator=(const HttpResponse&) = default;
 
-    DEFAULT_MOVE(HttpResponse);
+	HttpResponse(HttpResponse&&) = default;
+	HttpResponse &operator=(HttpResponse &&) = default;
 
     int status_code() const noexcept;
 
