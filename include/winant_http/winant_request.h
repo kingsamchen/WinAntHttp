@@ -9,6 +9,8 @@
 #ifndef WINANT_HTTP_WINANT_REQUEST_H_
 #define WINANT_HTTP_WINANT_REQUEST_H_
 
+#include <iostream>
+
 #include "kbase/basic_macros.h"
 #include "kbase/basic_types.h"
 
