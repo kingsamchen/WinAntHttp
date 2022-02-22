@@ -7,6 +7,9 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED YES)
 set(CMAKE_CXX_EXTENSIONS NO)
 
+# Add third-party modules
+add_subdirectory(third_party/KBase)
+
 # Get lists of source and header files
 file(GLOB_RECURSE ${PROJECT_NAME}_LIST
 	"${CMAKE_CURRENT_SOURCE_DIR}/src/*.c"
@@ -48,9 +51,8 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
 	"-DUNICODE -DNOMINMAX"
 )
 
-add_subdirectory(third_party/KBase)
-
-target_link_libraries(${PROJECT_NAME} PRIVATE
+# Link additional libs
+target_link_libraries(${PROJECT_NAME} PUBLIC
 	kbase
 	wininet
 )
